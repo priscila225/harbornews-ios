@@ -7,6 +7,7 @@ final class NewsListViewController: UIViewController {
     let viewModel: NewsListViewModelProtocol
     let tableView = UITableView(frame: .zero, style: .plain)
     var articles: [Article] = []
+    private let sectionPicker = SectionPickerView()
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
     private var cancellables = Set<AnyCancellable>()
 
@@ -25,6 +26,7 @@ final class NewsListViewController: UIViewController {
         title = "Harbor News"
         view.backgroundColor = .systemBackground
         viewModel.actions = self
+        sectionPicker.delegate = self
         layoutContent()
         registerCells()
         bind()
@@ -35,9 +37,11 @@ final class NewsListViewController: UIViewController {
         let weatherStrip = UIHostingController(rootView: WeatherStripView())
         addChild(weatherStrip)
         weatherStrip.view.translatesAutoresizingMaskIntoConstraints = false
+        sectionPicker.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(weatherStrip.view)
+        view.addSubview(sectionPicker)
         view.addSubview(tableView)
         view.addSubview(activityIndicator)
         weatherStrip.didMove(toParent: self)
@@ -47,7 +51,10 @@ final class NewsListViewController: UIViewController {
             weatherStrip.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             weatherStrip.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             weatherStrip.view.heightAnchor.constraint(equalToConstant: 44),
-            tableView.topAnchor.constraint(equalTo: weatherStrip.view.bottomAnchor),
+            sectionPicker.topAnchor.constraint(equalTo: weatherStrip.view.bottomAnchor),
+            sectionPicker.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            sectionPicker.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: sectionPicker.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),

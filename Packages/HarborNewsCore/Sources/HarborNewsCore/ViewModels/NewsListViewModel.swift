@@ -8,13 +8,16 @@ public protocol NewsListActions: AnyObject {
 public protocol NewsListViewModelProtocol: AnyObject {
     var state: ViewState<[Article]> { get }
     var statePublisher: AnyPublisher<ViewState<[Article]>, Never> { get }
+    var section: NewsSection { get }
     var actions: NewsListActions? { get set }
     func load(section: String?)
+    func select(section: NewsSection)
     func didSelect(_ article: Article)
 }
 
 public final class NewsListViewModel: NewsListViewModelProtocol, ObservableObject {
     @Published public private(set) var state: ViewState<[Article]> = .idle
+    public private(set) var section: NewsSection = .top
     public var statePublisher: AnyPublisher<ViewState<[Article]>, Never> { $state.eraseToAnyPublisher() }
     public weak var actions: NewsListActions?
 
@@ -39,6 +42,13 @@ public final class NewsListViewModel: NewsListViewModelProtocol, ObservableObjec
                 self?.state = .error(error.localizedDescription)
             }
         }
+    }
+
+    /// Switches the section filter; choosing the section that is already shown does nothing.
+    public func select(section: NewsSection) {
+        guard section != self.section else { return }
+        self.section = section
+        load(section: section.query)
     }
 
     public func didSelect(_ article: Article) {
