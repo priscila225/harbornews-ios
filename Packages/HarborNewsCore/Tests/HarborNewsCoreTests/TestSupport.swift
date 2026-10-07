@@ -11,9 +11,19 @@ struct StubHTTPClient: HTTPClient {
 
 struct StubArticleRepository: ArticleRepository {
     let result: Result<[Article], Error>
+    var detail: Result<ArticleDetail, Error> = .failure(TestError())
+    var related: Result<[Article], Error> = .success([])
 
     func headlines(section: String?) async throws -> [Article] {
         try result.get()
+    }
+
+    func articleDetail(id: String) async throws -> ArticleDetail {
+        try detail.get()
+    }
+
+    func fetchRelated(articleID: String, completion: @escaping (Result<[Article], Error>) -> Void) {
+        completion(related)
     }
 }
 
@@ -27,6 +37,12 @@ struct StubWeatherService: WeatherService {
 
 struct TestError: Error, LocalizedError {
     var errorDescription: String? { "boom" }
+}
+
+extension ArticleDetail {
+    static func fixture(shareURL: String = "https://harbornews.example/a1") -> ArticleDetail {
+        ArticleDetail(id: "a1", title: "Harbor reopens", body: "Ferries are running", shareURL: shareURL)
+    }
 }
 
 extension Article {
