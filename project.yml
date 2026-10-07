@@ -1,0 +1,38 @@
+name: HarborNews
+options:
+  bundleIdPrefix: com.harbornews
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+packages:
+  HarborNewsCore:
+    path: Packages/HarborNewsCore
+targets:
+  HarborNews:
+    type: application
+    platform: iOS
+    sources:
+      - App
+    dependencies:
+      - package: HarborNewsCore
+    info:
+      path: Config/Info.plist
+      properties:
+        CFBundleDisplayName: Harbor News
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.harbornews.app
+        TARGETED_DEVICE_FAMILY: "1"
+schemes:
+  HarborNews:
+    build:
+      targets:
+        HarborNews: all
