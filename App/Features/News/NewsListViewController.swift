@@ -7,6 +7,7 @@ final class NewsListViewController: UIViewController {
     let viewModel: NewsListViewModelProtocol
     let tableView = UITableView(frame: .zero, style: .plain)
     var articles: [Article] = []
+    var shareCounts: [String: Int] = [:]
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
     private var cancellables = Set<AnyCancellable>()
 
@@ -75,6 +76,7 @@ final class NewsListViewController: UIViewController {
             activityIndicator.stopAnimating()
             self.articles = articles
             tableView.reloadData()
+            loadShareCounts(for: articles)
         case .error(let message):
             activityIndicator.stopAnimating()
             presentError(message)
