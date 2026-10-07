@@ -4,20 +4,20 @@ import Testing
 
 @Suite("Services and storage")
 struct ServicesAndStorageTests {
-    @Test func weatherServiceRoundsTheTemperature() throws {
+    @Test func weatherServiceRoundsTheTemperature() async throws {
         let json = #"{"tempF":71.6,"summary":"Sunny"}"#
         let service = URLSessionWeatherService(client: StubHTTPClient(result: .success(Data(json.utf8))))
 
-        let conditions = try awaitSync { try await service.current() }
+        let conditions = try await service.current()
 
         #expect(conditions == Conditions(temperatureF: 72, summary: "Sunny"))
     }
 
-    @Test func weatherServiceRejectsAReadingWithoutATemperature() {
+    @Test func weatherServiceRejectsAReadingWithoutATemperature() async {
         let service = URLSessionWeatherService(client: StubHTTPClient(result: .success(Data(#"{"summary":"x"}"#.utf8))))
 
-        #expect(throws: WeatherError.noTemperature) {
-            try awaitSync { try await service.current() }
+        await #expect(throws: WeatherError.noTemperature) {
+            try await service.current()
         }
     }
 
