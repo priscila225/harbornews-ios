@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 @testable import HarborNewsCore
 
@@ -32,5 +33,17 @@ struct TestError: Error, LocalizedError {
 extension Article {
     static func fixture(id: String = "a1", title: String = "Harbor reopens") -> Article {
         Article(id: id, title: title, summary: "Ferries are running", section: "local")
+    }
+}
+
+struct StubHourlyService: HourlyForecastService {
+    let entries: Result<[HourlyEntry], Error>
+
+    func fetch() async throws -> [HourlyEntry] {
+        try entries.get()
+    }
+
+    func forecastPublisher() -> AnyPublisher<[HourlyEntry], Never> {
+        Empty(completeImmediately: false).eraseToAnyPublisher()
     }
 }

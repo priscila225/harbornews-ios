@@ -25,6 +25,9 @@ final class NewsListViewController: UIViewController {
         title = "Harbor News"
         view.backgroundColor = .systemBackground
         viewModel.actions = self
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Forecast", style: .plain, target: self, action: #selector(showForecast)
+        )
         layoutContent()
         registerCells()
         bind()
@@ -85,5 +88,9 @@ final class NewsListViewController: UIViewController {
         let alert = UIAlertController(title: "Headlines unavailable", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+
+    @objc private func showForecast() {
+        navigationController?.pushViewController(HourlyForecastViewController(), animated: true)
     }
 }
