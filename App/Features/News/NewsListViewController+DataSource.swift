@@ -15,7 +15,8 @@ extension NewsListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ArticleCell.reuseIdentifier, for: indexPath)
         if let articleCell = cell as? ArticleCell {
-            articleCell.configure(with: articles[indexPath.row])
+            let article = articles[indexPath.row]
+            articleCell.configure(with: article, shareCount: shareCounts[article.id])
         }
         return cell
     }

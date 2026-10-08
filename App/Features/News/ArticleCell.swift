@@ -16,8 +16,9 @@ final class ArticleCell: UITableViewCell {
         fatalError("init(coder:) is not supported")
     }
 
-    func configure(with article: Article) {
+    func configure(with article: Article, shareCount: Int? = nil) {
         textLabel?.text = article.title
-        detailTextLabel?.text = article.summary
+        let shares = shareCount.map { "  |  \($0) shares" } ?? ""
+        detailTextLabel?.text = article.summary + shares
     }
 }
